@@ -11,7 +11,7 @@ Cmdr's [Security Policy](https://github.com/evaera/Cmdr/blob/master/SECURITY.md)
 - how we respond to security issues
 - how to securely and appropriately report vulnerabilities to us
 
-We recommend reading this policy fully before you report any vulnerabilities. This helps us ensure that you understand the policy and act in compliance with it.
+We recommend reading this policy fully before you report any vulnerabilities.
 
 ## A quick note for our users
 

@@ -2,7 +2,7 @@
 
 We take the security of Cmdr extremely seriously. If you believe you have found a vulnerability within the library, you need to report it to us.
 
-We recommend reading this policy fully before you report any vulnerabilities. This helps us ensure that you understand the policy and act in compliance with it.
+We recommend reading this policy fully before you report any vulnerabilities.
 
 We value those who take the time and effort to report security vulnerabilities according to this policy and will offer recognition as appropriate. However, as an independent open-source project, we cannot offer monetary rewards for vulnerability disclosures.
 
@@ -26,10 +26,10 @@ Please have ready to share with us, when we request, steps to reproduce and/or a
 
 You'll need to contact one of our maintainers:
 
-| GitHub | Discord Username | Discord ID |
-| ----- | ----------------- | ---------- |
-| [@autonordev](https://github.com/autonordev) | [@elenr](https://discord.com/users/340861504255557634) | `340861504255557634` |
-| [@wilyt1](https://github.com/wilyt1) | [@countyl1mits](https://discord.com/users/235542521894273024) | `235542521894273024` |
+| GitHub                                       | Discord Username                                              | Discord ID           |
+| -------------------------------------------- | ------------------------------------------------------------- | -------------------- |
+| [@autonordev](https://github.com/autonordev) | [@elenr](https://discord.com/users/340861504255557634)        | `340861504255557634` |
+| [@wilyt1](https://github.com/wilyt1)         | [@countyl1mits](https://discord.com/users/235542521894273024) | `235542521894273024` |
 
 > If one of the usernames above have changed and are no longer accurate, or you want to double check the usernames are correct, you can use the https://discord.id/ lookup service.
 
@@ -79,7 +79,7 @@ We will **not** consider reports which:
 - vulnerabilities which do not affect the latest released version of Cmdr or the 'mainline' version (the current code on the main branch)
 - do not relate to the Cmdr library; for example, a bug in example code we provide on our website/Discord or a bug which only affects a downstream project or game that uses/depends on Cmdr. In the case of downstream vulnerabilities, you should report these to them directly.
 
-Generally speaking, reports peratining to things like Denial of Service, rate limiting, and spam are unlikely to be considered unless these have side effects which can create a vulnerability (fictional example: spamming a hook-restricted command 100,000 times will let you bypass the hook).
+Generally speaking, reports pertaining to things like Denial of Service, rate limiting, and spam are unlikely to be considered unless these have side effects which can create a vulnerability (fictional example: spamming a hook-restricted command 100,000 times will let you bypass the hook).
 
 If something is out of scope, you are welcome to open a GitHub Issue and report it as a bug. Out of scope doesn't mean it won't be fixed or it's not a problem, just that it's not a security vulnerability requiring a fast response.
 
@@ -87,8 +87,8 @@ If you've identified a potential vulnerability in a pull request which hasn't be
 
 ## Legalities
 
-This policy is designed to be compatible with common vulnerability disclosure good practice. It does not give you permission to act in any way that is inconsistent with the law, or which might cause us or our users to be in breach of any legal obligations.
+This policy is designed to be compatible with common vulnerability disclosure good practice. It does not give you permission to act in any way that is inconsistent with the law, or which might cause us or our users to be in breach of any obligations.
 
-Since we don't own the games Cmdr runs in, we usually do not have the standing to seek charges for computer intrusion or abuse offences. Accordingly, we can't provide any type of indemnity; you should refer to the policies of Roblox and any game you intend to conduct testing against (if not your own).
+We don't own the games Cmdr runs in, nor the Roblox platform. You should refer to the policies of Roblox and any game you intend to conduct testing against (if not your own).
 
 **Nothing in this policy is legal advice. Nothing in this policy is legally binding (e.g. a contract).**
