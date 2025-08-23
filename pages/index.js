@@ -50,10 +50,6 @@ export default function Home() {
       <Hero />
       <main>
         <div className="container">
-          <Admonition type="info" title="Beta">
-            This website is a new service and <a href="https://github.com/evaera/Cmdr/issues/new?assignees=&labels=scope%3Aixp&projects=&template=websitefeedback.md" target="_blank">your feedback</a> will help improve it. In the mean time, you may find it helpful to refer to <a href="https://eryn.io/Cmdr" target="_blank">the current documentation</a>.
-          </Admonition>
-
           <section className={styles.featuresOuter}>
             <div className={styles.featuresInner}>
               <Feature title="Integrates with your systems" description="Cmdr stays out of the way, making it easy to write your own commands which plug-in to your systems. Help debug your game by triggering events or printing useful data." />
