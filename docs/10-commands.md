@@ -88,6 +88,8 @@ Including [Hooks](/docs/hooks), the full execution order is:
 
 \* Only runs if `ClientRun` isn't present or `ClientRun` returns `nil`.
 
+> This order doesn't include [guards](/docs/guards)
+
 You should be aware that an exploiter can, in theory, manipulate or bypass any client parts of execution. This isn't an issue though as exploiters can already do anything that's possible for a client component to do, but you should keep it in mind when designing your systems.
 
 ## Default commands
@@ -121,7 +123,9 @@ Cmdr.Registry:RegisterDefaultCommands(function(cmd)
 end)
 ```
 
-More practically, you could use this to create an allow list of default commands you want in your game, and ones you don't.
+More practically, you could use this to create an allow list of default commands you want in your game.
+
+<!-- This should probably be moved to types -->
 
 ## Argument value operators
 
