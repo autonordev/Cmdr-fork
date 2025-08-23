@@ -125,8 +125,6 @@ end)
 
 More practically, you could use this to create an allow list of default commands you want in your game.
 
-<!-- This should probably be moved to types -->
-
 ## Argument value operators
 
 Instead of typing out an entire argument, you can insert the following operators as a shorthand.
@@ -224,6 +222,38 @@ return {
 				Description = `The player to {action} from the allow list.`,
 			}
 		end,
+	},
+}
+```
+
+
+## AutoExec
+
+By adding an `AutoExec` table to your command definition, you can add commands that will automatically run when a player's CmdrClient loads.
+
+This is often used to bind aliases. For example, the built-in teleport command uses it to create `bring` and `to` commands (which are aliases).
+
+```lua
+return {
+	Name = "teleport",
+	Aliases = { "tp" },
+	Description = "Teleports a player or set of players to one target.",
+	Group = "DefaultAdmin",
+	AutoExec = {
+		'alias "bring|Brings a player or set of players to you." teleport $1{players|players|The players to bring} ${me}',
+		'alias "to|Teleports you to another player or location." teleport ${me} $1{player @ vector3|Destination|The player or location to teleport to}',
+	},
+	Args = {
+		{
+			Type = "players",
+			Name = "From",
+			Description = "The players to teleport",
+		},
+		{
+			Type = "player @ vector3",
+			Name = "Destination",
+			Description = "The player to teleport to",
+		},
 	},
 }
 ```

@@ -76,3 +76,28 @@ return function (registry)
 	registry:RegisterType("place", registry.Cmdr.Util.MakeEnumType("Place", {"World 1", "World 2", "World 3", "Final World"}))
 end
 ```
+
+## Advanced features
+
+:::note Work in progress
+
+We're sorry but this section has yet to be written.
+
+Take a look at `TypeMethods` in the `Registry` for a full list.
+
+:::
+
+<!--
+
+This article should probably be rewritten to be better structured and talk about the different options for types.
+
+These are the methods we haven't mentioned in this article:
+
+* Autocomplete
+* DisplayName
+* Listable
+* ValidateOnce
+* Prefixes
+* ArgumentOperatorAliases
+
+-->

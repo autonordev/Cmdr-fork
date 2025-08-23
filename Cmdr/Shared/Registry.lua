@@ -33,9 +33,11 @@ local Util = require(script.Parent.Util)
 	.Description string? -- A description of the command, displayed to the user in the `help` command and auto-complete menu.
 	.Group string? -- This property is intended to be used in hooks, so that you can categorise commands and decide if you want a specific user to be able to run them or not. But the `help` command will use them as headings.
 	.Args {ArgumentDefinition | (CommandContext) -> (ArgumentDefinition)} -- Arguments for the command; this is technically optional but if you have no args, set it to `{}` or you may experience some interface weirdness.
-	.Data (CommandContext, ...) -> any -- If your command needs to gather some extra data from the client that's only available on the client, then you can define this function. It should accept the command context and tuple of transformed arguments, and return a single value which will be available in the command with [CommandContext:GetData](/api/CommandContext#GetData).
-	.ClientRun (CommandContext, ...) -> string? -- If you want your command to run on the client, you can add this function to the command definition itself. It works exactly like the function that you would return from the Server module. If this function returns a string, the command will run entirely on the client and won't touch the server (which means server-only hooks won't run). If this function doesn't return anything, it will fall back to executing the Server module on the server.
-	.Run (CommandContext, ...) -> string? -- An older version of ClientRun. There are very few scenarios where this is preferred to ClientRun (so, in other words, don't use it!). These days, `Run` is only used for some dark magic involving server-sided command objects.
+	.Data ((CommandContext, ...) -> any)? -- If your command needs to gather some extra data from the client that's only available on the client, then you can define this function. It should accept the command context and tuple of transformed arguments, and return a single value which will be available in the command with [CommandContext:GetData](/api/CommandContext#GetData).
+	.ClientRun ((CommandContext, ...) -> string?)? -- If you want your command to run on the client, you can add this function to the command definition itself. It works exactly like the function that you would return from the Server module. If this function returns a string, the command will run entirely on the client and won't touch the server (which means server-only hooks won't run). If this function doesn't return anything, it will fall back to executing the Server module on the server.
+	.Run ((CommandContext, ...) -> string?)? -- An older version of ClientRun. There are very few scenarios where this is preferred to ClientRun (so, in other words, don't use it!). These days, `Run` is only used for some dark magic involving server-sided command objects.
+	.AutoExec {string}? -- Allows you to list commands that will be automatically executed by clients on load, e.g. binding built-in aliases.
+	.Guards {(CommandContext, ...) - string?}? -- Guards operate similarly to hooks, but are passed in rather than registered. See the docs article on Guards for more.
 ]=]
 
 --[=[
@@ -341,7 +343,9 @@ function Registry:RegisterCommand(
 	local commandObject = require(commandScript)
 	assert(
 		typeof(commandObject) == "table",
-		`[Cmdr] Invalid return value from command script "{commandScript.Name}" (CommandDefinition expected, got {typeof(commandObject)})`
+		`[Cmdr] Invalid return value from command script "{commandScript.Name}" (CommandDefinition expected, got {typeof(
+			commandObject
+		)})`
 	)
 
 	if commandServerScript then

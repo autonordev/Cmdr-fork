@@ -30,6 +30,20 @@ return function (registry)
 end
 ```
 
+<!--
+
+A note should be added here including and explaining this code sample:
+
+```lua
+registry:RegisterHook("BeforeRun", function(context)
+  if context.Name == "teleport" and context:GetArgument(1):GetValue() == context.Executor then
+    context.Group = "DefaultDebug"
+end
+end, -1)
+```
+
+-->
+
 ## AfterRun
 
 The AfterRun hook runs directly after a command is run. The callback is also passed a [CommandContext](/api/CommandContext), but the `Response` property is now available, which is the response from the command implementation (what would normally be displayed after running the command).
@@ -44,17 +58,3 @@ Cmdr.Registry:RegisterHook("AfterRun", function(context)
   return "Returning a string from this hook replaces the response message with this text"
 end)
 ```
-
-## Execution order
-
-1. `BeforeRun` hook on client.
-2. `Data` function on client.
-3. `ClientRun` function on client.
-4. `BeforeRun` hook on server. \*
-5. Server command implementation returned from Server module. \*
-6. `AfterRun` hook on server. \*
-7. `AfterRun` hook on client.
-
-\* Only runs if `ClientRun` isn't present or `ClientRun` returns `nil`.
-
-You should be aware that an exploiter can, in theory, manipulate or bypass any client parts of execution. This isn't an issue though as exploiters can already do anything that's possible for a client component to do, but you should keep it in mind when designing your systems.
