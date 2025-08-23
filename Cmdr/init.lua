@@ -35,12 +35,35 @@ end
 	Refers to a table containing many useful utility functions.
 ]=]
 
+--[=[
+	@within Cmdr
+	@prop ReplicatedRoot Instance
+	@readonly
+	@private
+	A reference to CmdrClient, used to replicate commands and types/hooks.
+]=]
+
+--[=[
+	@within Cmdr
+	@prop RemoteFunction RemoteFunction
+	@readonly
+	@private
+	Used for [network event handlers](docs/networkeventhandlers)
+]=]
+--[=[
+	@within Cmdr
+	@prop RemoteEvent RemoteEvent
+	@readonly
+	@private
+	Used to handle command invocations
+]=]
+
 local Cmdr
 do
 	Cmdr = setmetatable({
-		ReplicatedRoot = nil,
-		RemoteFunction = nil,
-		RemoteEvent = nil,
+		ReplicatedRoot = nil :: Instance?,
+		RemoteFunction = nil :: RemoteFunction?,
+		RemoteEvent = nil :: RemoteEvent?,
 		Util = Util,
 		DefaultCommandsFolder = script.BuiltInCommands,
 	}, {

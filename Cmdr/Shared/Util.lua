@@ -4,15 +4,11 @@ local TextService = game:GetService("TextService")
 	@class Util
 
 	Cmdr utilities module.
-
-	:::info Beta
-	This page is incomplete and some functions are missing. You might want to refer to [the current documentation](https://eryn.io/Cmdr/api/Util.html).
-	:::
 ]=]
 local Util = {}
 
 --[=[
-	Takes an array and flips its values into dictionary keys with value of true.
+	Accepts an array and flips it into a dictionary, its values becoming keys in the dictionary with the value of `true`.
 ]=]
 function Util.MakeDictionary(array: { any }): { [any]: true }
 	local dictionary = {}
@@ -56,7 +52,9 @@ end
 
 	Exact matches will be inserted in the front of the resulting array.
 ]=]
-function Util.MakeFuzzyFinder(setOrContainer: any): (string, boolean?, boolean?) -> string
+function Util.MakeFuzzyFinder(
+	setOrContainer: { string } | { Instance } | { EnumItem } | Instance | { { Name: string } }
+): (string, boolean?, boolean?) -> string
 	local names
 	local instances = {}
 
@@ -70,7 +68,7 @@ function Util.MakeFuzzyFinder(setOrContainer: any): (string, boolean?, boolean?)
 		if
 			typeof(setOrContainer[1]) == "Instance"
 			or typeof(setOrContainer[1]) == "EnumItem"
-			or (typeof(setOrContainer[1]) == "table" and typeof(setOrContainer[1].Name) == "string")
+			or (typeof(setOrContainer[1]) == "table" and typeof((setOrContainer[1] :: any).Name) == "string")
 		then
 			names, instances = transformInstanceSet(setOrContainer)
 		elseif type(setOrContainer[1]) == "string" then
@@ -121,7 +119,7 @@ end
 
 	If no Name property is present, then tostring will be called instead.
 ]=]
-function Util.GetNames(instances: any): { string }
+function Util.GetNames(instances: { { Name: string? } }): { string }
 	local names = {}
 
 	for i = 1, #instances do
@@ -132,7 +130,7 @@ function Util.GetNames(instances: any): { string }
 end
 
 --[=[
-	Splits a string using a simple separator (no quote parsing)
+	Splits a string using a given 'simple' separator (no quote parsing)
 ]=]
 function Util.SplitStringSimple(input: string, sep: string?): { string }
 	if sep == nil then
@@ -152,7 +150,7 @@ local function charCode(n)
 end
 
 --[=[
-	Parses escape sequences into their fully qualified characters
+	Replaces escape sequences with their fully qualified characters in a string. This only parses `\n`, `\t`, `\uXXXX`, and `\xXX` where `X` is any hexadecimal character.
 ]=]
 function Util.ParseEscapeSequences(text: string): string
 	return text:gsub("\\(.)", {
@@ -164,7 +162,7 @@ function Util.ParseEscapeSequences(text: string): string
 end
 
 --[=[
-	No description.
+	@private
 ]=]
 function Util.EncodeEscapedOperator(text: string, op: string): string
 	local first = op:sub(1, 1)
@@ -180,7 +178,7 @@ end
 
 local OPERATORS = { "&&", "||", ";" }
 --[=[
-	No description.
+	@private
 ]=]
 function Util.EncodeEscapedOperators(text: string): string
 	for _, operator in ipairs(OPERATORS) do
@@ -204,9 +202,9 @@ local function decodeControlChars(text)
 end
 
 --[=[
-	Splits a string by space but taking into account quoted sequences which will be treated as a single argument.
+	Splits a string by spaces, but taking into account double-quoted sequences which will be treated as a single value.
 ]=]
-function Util.SplitString(text: string, max: number): { string }
+function Util.SplitString(text: string, max: number?): { string }
 	text = encodeControlChars(text)
 	max = max or math.huge
 	local t = {}
@@ -238,6 +236,7 @@ end
 
 --[=[
 	Takes an array of arguments and a max value. Any indicies past the max value will be appended to the last valid argument.
+	@private
 ]=]
 function Util.MashExcessArguments(arguments: { string }, max: number): { string }
 	local t = {}
@@ -271,7 +270,7 @@ end
 	Makes an Enum type.
 	@return TypeDefinition
 ]=]
-function Util.MakeEnumType(name: string, values: any)
+function Util.MakeEnumType(name: string, values: { string } | { { Name: string } })
 	local findValue = Util.MakeFuzzyFinder(values)
 	return {
 		Validate = function(text)
@@ -289,6 +288,7 @@ end
 
 --[=[
 	Parses a prefixed union type argument (such as %Team)
+	@private
 ]=]
 function Util.ParsePrefixedUnionType(typeValue: string, rawValue: string): (string?, string?, string?)
 	local split = Util.SplitStringSimple(typeValue)
@@ -317,7 +317,7 @@ function Util.ParsePrefixedUnionType(typeValue: string, rawValue: string): (stri
 end
 
 --[=[
-	Creates a listable type from a singular type
+	Creates a plural (listable) type from a singular type
 	@param type TypeDefinition
 	@param override table
 	@return TypeDefinition
@@ -354,9 +354,9 @@ local function decodeCommandEscape(text)
 end
 
 --[=[
-	Creates a listable type from a singular type
 	@param dispatcher Dispatcher
-	@return string? -- output from Dispatcher:EvaluateAndRun as a string
+	@return string? -- output from `Dispatcher:EvaluateAndRun` as a string
+	@private
 ]=]
 function Util.RunCommandString(dispatcher, commandString: string): string?
 	commandString = Util.ParseEscapeSequences(commandString)
@@ -380,8 +380,9 @@ end
 
 --[=[
 	Runs embedded commands and replaces them
+	Parses embedded commands, evaluating the output of the command when run with `Dispatcher:EvaluateAndRun`. Returns the response string.
 	@param dispatcher Dispatcher
-	@param str string
+	@param str string -- a command string
 ]=]
 function Util.RunEmbeddedCommands(dispatcher, str): string
 	str = encodeCommandEscape(str)
@@ -411,8 +412,11 @@ end
 
 --[=[
 	Replaces arguments in the format $1, $2, $something with whatever the given function returns for it.
+
+	The (legacy) typings say that you can pass a function into `replace`, but I'm not sure that's true.
+
 	@param str string
-	@param replace string
+	@param replace { string } | { [string]: string } | (string) -> (string)
 ]=]
 function Util.SubstituteArgs(str, replace): string
 	str = encodeCommandEscape(str)
@@ -433,6 +437,7 @@ end
 --[=[
 	Creates an alias command, should only be used on the client.
 	@return CommandDefinition
+	@private
 ]=]
 function Util.MakeAliasCommand(name: string, commandString: string)
 	local commandName, commandDescription = unpack(name:split("|"))
@@ -480,9 +485,17 @@ function Util.MakeAliasCommand(name: string, commandString: string)
 end
 
 --[=[
-	Makes a type that contains a sequence, e.g. Vector3 or Color3
+	Makes a type that contains a sequence, e.g. Vector3 or Color3. The delimeter can be either `,` or whitespace.
 
-	For options, one of Constructor or Parse is required
+	Options can contain:
+
+	- `TransformEach`, a function that is run on each member of the sequence, transforming it individually
+	- `ValidateEach`, a function that is run on each member of the sequence validating it. It is passed the value and the index at which it occurs in the sequence. It should return true if it is valid, or false and a string reason if not.
+
+	Options must contain one of:
+
+	- `Parse`, a function that parses all of the values into a single type
+	- `Constructor`, a function that expects the values unpacked as parameters to create the parsed object. This is a shorthand that allows you to set a Constructor directly to `Vector3.new`, for example.
 
 	@param options { Parse: function?, Constructor: function?, TransformEach: function?, ValidateEach: function?, Prefixes: {string}?, Length: number? }
 	@return ArgumentDefinition
@@ -546,10 +559,10 @@ function Util.SplitPrioritizedDelimeter(text: string, delimiters: { string }): {
 	return
 end
 
--- TODO: Continue documentation from here down
-
---	Maps values of an array through a callback and returns an array of mapped values.
-function Util.Map(array, callback)
+--[=[
+	Maps values from one array to a new array. Passes each value through the given callback and uses its return value in the same position in the new array.
+]=]
+function Util.Map(array: { any }, callback: (any, number) -> any): { any }
 	local results = {}
 
 	for i, v in ipairs(array) do
@@ -559,8 +572,12 @@ function Util.Map(array, callback)
 	return results
 end
 
--- Maps arguments #2-n through callback and returns values as tuple
-function Util.Each(callback, ...)
+--[=[
+	Maps arguments #2-n through callback and returns values as tuple
+	@param ... ...
+	@return ...
+]=]
+function Util.Each(callback: (any) -> any, ...)
 	local results = {}
 	for i, value in ipairs({ ... }) do
 		results[i] = callback(value)
@@ -568,8 +585,10 @@ function Util.Each(callback, ...)
 	return unpack(results)
 end
 
--- Emulates tabstops with spaces
-function Util.EmulateTabstops(text, tabWidth)
+--[=[
+	Returns a string emulating `\t` tab stops with spaces.
+]=]
+function Util.EmulateTabstops(text: string, tabWidth: number): string
 	local column = 0
 	local textLength = #text
 	local result = table.create(textLength)
@@ -591,6 +610,9 @@ function Util.EmulateTabstops(text, tabWidth)
 	return table.concat(result)
 end
 
+--[=[
+	@private
+]=]
 function Util.Mutex()
 	local queue = {}
 	local locked = false

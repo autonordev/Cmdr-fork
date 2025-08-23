@@ -13,7 +13,6 @@ local IsServer = RunService:IsServer()
 	:::
 ]=]
 
--- TODO: Add moonwave annotations
 local Command = {}
 Command.__index = Command
 

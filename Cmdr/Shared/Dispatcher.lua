@@ -188,12 +188,14 @@ function Dispatcher:Run(...): string
 	return command:Run()
 end
 
+-- later: @since v1.13.0
 --[=[
 	@within Dispatcher
 	@private
 	Runs command-specific guard methods
 	@param commandContext CommandContext
 	@param ... ArgumentContext...
+	@unreleased
 
 	@return nil | string -- nil for ok, string (errorText) for cancellation
 ]=]
